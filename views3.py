@@ -121,12 +121,16 @@ class One_item(generics.GenericAPIView):
     
 
 
-def change_items_count(request):
-    if request.method=="GET":
-        item_id = request.GET["id"]
-        count_difference = request.GET["difference"]
-        print(item_id, count_difference)
-        print(sp.get_all())
-        return HttpResponse("Yes!")
+class Change_items_count(generics.GenericAPIView):
+      def get(self, request):
+          id = request.GET["id"]
+          item = sp.objects.filter(id = id)[0]
+          count_difference = request.GET["difference"]
+          if (item.count+int(count_difference))>0:
+              response = "permission"
+              item.count+=int(count_difference)
+              item.save()
+          else:                                                                                                                                                84             response = "prohibition"
+          return Response({"response": response})
 
     
